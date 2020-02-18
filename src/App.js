@@ -29,44 +29,72 @@ class App extends React.Component {
      this.state={
        firstState: 'Welcome',
       cartCount:0,
-       product:[]
+       product:[],
+       cart: []
      }
    }
 
   componentDidMount() {
+      this.loadproducts()
+      this.initCart()
+     }
+  initCart(){
+    let myCart=localStorage.getItem('cart')
+    console.log(myCart)
+    myCart=JSON.parse(myCart)
     this.setState({
-      firstState:'The biggest choice',
-    
+      cart:myCart || []
     })
+
   }
  
-  addCount(){
-    const newCount=this.state.cartCount+1;
-    this.setState({
-      cartCount:newCount
-    })
-  }
+  addCart(prod){
+       const newCart=this.state.cart;
+       newCart.push(prod);
+       localStorage.setItem('cart',JSON.stringify(newCart))
+       this.setState({
+         cart:newCart
+       })
+    }
+
   componentDidUpdate(prevProps,prevState){
     if(this.state.cartCount===10)
       alert('Not possible')
   }
+
   loadproducts(){
-    this.setState({
-      product:productsAr
-    })
+     fetch('https://my-json-server.typicode.com/shiyasvp92/sample_products/products', {
+       method:'GET'
+  })
+   .then((response)=>{
+     return response.json()
+   })
+   .then((data)=>{console.log(data)
+  this.setState({
+     product:data
+  })})
+  .catch((error)=>{
+     console.error(error)
+  })
+     
+  }
+  viewCart(){
+    console.log(this.state.cart)
   }
   render() {
     const productslist=this.state.product.map((prod)=>{
-       return tiles(this.addCount.bind(this),prod)
+       return tiles(this.addCart.bind(this),prod)
     })
-    console.log(productslist)
+
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
           <a className="navbar-brand" href="#">Navbar</a>
           <button onClick={()=>{this.loadproducts()}}>load products</button>
-          <button className="right" type="button">
-            Cart ({this.state.cartCount})
+          <button className="right" type="button" onClick={()=>{
+            this.viewCart();
+          }}>
+              Cart ({this.state.cart.length})
         </button>        
         </nav>
         <div className="container">

@@ -1,8 +1,8 @@
 import React from "react";
-export default function tiles(addCount,prod)
+export default function tiles(addCart,prod)
 {
   return(
-    <div className="col-md-4 col-lg-3 col-sm-12">
+    <div className="col-md-4 col-lg-3 col-sm-12" key={prod.id}>
               <div className="card mb-3" style={{"maxWidth": "540px", "color": "red"}}>
                 <div className="row no-gutters">
                   <div className="col-md-4">
@@ -14,7 +14,7 @@ export default function tiles(addCount,prod)
                       <h6 className="card-title" id="#first-title"style={{"maxWidth": "540px", "color": "red"}}>{prod.price}</h6>
                       <div>
                         <button className="btn btn-primary add-btn"
-                        onClick={()=>{addCount()}
+                        onClick={()=>{addCart(prod)}
                          }
                     >add</button>
                        
