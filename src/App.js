@@ -1,101 +1,82 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import tiles from './components/tiles';
 
-const productsAr=[
-  {
-    "id":1,
-     "title":"Realme 5i (Forest Green, 64 GB)  (4 GB RAM)",
-     "price":"₹8,999",
-     "image":"https://rukminim1.flixcart.com/image/312/312/k612pow0/mobile/b/s/r/realme-c3-rmx2027-original-imafzkzhts5kfmxt.jpeg?q=70"
-  },
-  {
-    "id":2,
-     "title":"Realme 5i (Aqua Blue, 64 GB)  (4 GB RAM)",
-     "price":"₹8,999",
-     "image":"https://rukminim1.flixcart.com/image/416/416/k65d18w0pkrrdj/mobile/r/x/z/realme-5i-rmx2030-original-imafnsx5pakdfdpb.jpeg?q=70"
-  },
-  {
-    "id":3,
-     "title":"Redmi 7A (Matte Black, 32 GB)  (2 GB RAM)",
-     "price":"₹5,499",
-     "image":"https://rukminim1.flixcart.com/image/416/416/jzrb53k0pkrrdj/mobile/y/c/h/mi-redmi-7a-mzb7798in-original-imafg27hkgpkhsdy.jpeg?q=70"
-  },
-]
 class App extends React.Component {
-   constructor(props){
-     super(props);
-     this.state={
-       firstState: 'Welcome',
-      cartCount:0,
-       product:[],
-       cart: []
-     }
-   }
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstState: 'Welcome',
+      cartCount: 0,
+      product: [],
+      cart: []
+    }
+  }
 
   componentDidMount() {
-      this.loadproducts()
-      this.initCart()
-     }
-  initCart(){
-    let myCart=localStorage.getItem('cart')
+    this.loadproducts()
+    this.initCart()
+  }
+
+  initCart() {
+    let myCart = localStorage.getItem('cart')
     console.log(myCart)
-    myCart=JSON.parse(myCart)
+    myCart = JSON.parse(myCart)
     this.setState({
-      cart:myCart || []
+      cart: myCart || []
     })
 
   }
- 
-  addCart(prod){
-       const newCart=this.state.cart;
-       newCart.push(prod);
-       localStorage.setItem('cart',JSON.stringify(newCart))
-       this.setState({
-         cart:newCart
-       })
-    }
 
-  componentDidUpdate(prevProps,prevState){
-    if(this.state.cartCount===10)
-      alert('Not possible')
+  addCart(prod) {
+    const newCart = this.state.cart;
+    newCart.push(prod);
+    localStorage.setItem('cart', JSON.stringify(newCart))
+    this.setState({
+      cart: newCart
+    })
   }
 
-  loadproducts(){
-     fetch('https://my-json-server.typicode.com/shiyasvp92/sample_products/products', {
-       method:'GET'
-  })
-   .then((response)=>{
-     return response.json()
-   })
-   .then((data)=>{console.log(data)
-  this.setState({
-     product:data
-  })})
-  .catch((error)=>{
-     console.error(error)
-  })
-     
+  loadproducts() {
+    fetch('https://my-json-server.typicode.com/shiyasvp92/sample_products/products', {
+      method: 'GET'
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+        console.log(data)
+        this.setState({
+          product: data
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
   }
-  viewCart(){
+  viewCart() {
     console.log(this.state.cart)
   }
   render() {
-    const productslist=this.state.product.map((prod)=>{
-       return tiles(this.addCart.bind(this),prod)
+    const productslist = this.state.product.map((prod) => {
+      return tiles(this.addCart.bind(this), prod)
     })
 
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
           <a className="navbar-brand" href="#">Navbar</a>
-          <button onClick={()=>{this.loadproducts()}}>load products</button>
-          <button className="right" type="button" onClick={()=>{
-            this.viewCart();
-          }}>
+          <Link to="/cart">
+            <button onClick={() => { this.loadproducts() }}>load products</button>
+            <button className="right" type="button" onClick={() => {
+              this.viewCart();
+            }}>
               Cart ({this.state.cart.length})
-        </button>        
+        </button>
+          </Link>
         </nav>
         <div className="container">
           <div className="row">
